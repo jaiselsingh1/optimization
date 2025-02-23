@@ -57,7 +57,7 @@ function bracket_minimum(f, x; s = 1e-2, k = 2.0) # s and k are hyperparameters 
     end 
     while true
         c, yc = b + s, f(b + s)
-        if yb > yc 
+        if yc > yb
             return a < c ? (a, c) : (c, a)
         end 
         a, ya, b, yb = b, yb, c, yc
