@@ -46,6 +46,29 @@ function Base.max(a::Dual, b::Int)
 end 
 
 
+# bracketing for a unimodal function 
+function bracket_minimum(f, x; s = 1e-2, k = 2.0) # s and k are hyperparameters where s is the size of the step and then k is scaling the step
+    a, ya = x, f(x)
+    b, yb = a + s, f(a + s)
+    if yb > ya
+        a, b = b, a 
+        ya, yb = yb, ya 
+        s = -s
+    end 
+    while true
+        c, yc = b + s, f(b + s)
+        if yb > yc 
+            return a < c ? (a, c) : (c, a)
+        end 
+        a, ya, b, yb = b, yb, c, yc
+        s *= k
+    end 
+end 
+
+#functions with no local minima would fail at the above bracket_minimum function 
+
+
+
 
 
 
