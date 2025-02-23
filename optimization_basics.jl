@@ -24,5 +24,32 @@ x_val = 1.0
 @show diff_complex(f, x_val)
 
 
+struct Dual
+    v
+    ∂
+end 
+
+Base.:+(a::Dual, b::Dual) = Dual(a.v + b.v, a.∂ + b.∂)
+Base.:*(a::Dual, b::Dual) = Dual(a.v * b.v, a.v*b.∂ + b.v*a.∂)
+Base.log(a::Dual) = Dual(log(a.v), a.∂/a.v)
+
+function Base.max(a::Dual, b::Dual)
+    v = max(a.v, b.v)
+    ∂ = (a.v > b.v ? a.∂ : a.v < b.v ? b.∂ : NaN)
+    return Dual(v, ∂)
+end 
+
+function Base.max(a::Dual, b::Int)
+    v = max(a.v, b)
+    ∂ = a.v > b ? a.∂ : a.v < b ? 0 : NaN
+    return Dual(v, ∂)
+end 
+
+
+
+
+
+
+
 
 
