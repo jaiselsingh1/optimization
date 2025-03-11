@@ -64,8 +64,37 @@ function bracket_minimum(f, x; s = 1e-2, k = 2.0) # s and k are hyperparameters 
         s *= k
     end 
 end 
-
+# returns a new tuple interval to search between for the local minimum 
 #functions with no local minima would fail at the above bracket_minimum function 
+
+function quadratic_fit(f, a, b, c, n)
+    ya, yb, yc = f(a), f(b), f(c)
+    for i in 1:n-3
+        x = 0.5*(ya*(b^2-c^2)+yb*(c^2-a^2)+yc*(a^2-b^2)) /
+        (ya*(b-c) +yb*(c-a) +yc*(a-b))
+        yx = f(x)
+    end 
+
+    if x > b 
+        if yx > yb
+            c, yc = x, yx
+        end 
+    else 
+        a, ya, b, yb = b, yb, x, yx
+    end 
+
+    if x < b
+        if yx > yb
+            a, ya = x, yx
+        else
+            c, yc, b, yb = b, yb, x, yx
+        end
+    end 
+
+    return (a, b, c)
+end 
+
+
 
 
 
